@@ -3,7 +3,6 @@ import sys
 import pandas as pd
 import datetime
 
-dir_path = "./log"
 out_file = "./out.txt"
 
 def validate_date(date_text):
@@ -17,26 +16,32 @@ def validate_date(date_text):
 def change_df(file_path):
     out_lists = []
     with open(file_path) as rfile:
-        lines = rfile.readlines()
-        for line in lines:
-            line_split = line.split(' ',1)
+        try:
+            lines = rfile.readlines()
+            for line in lines:
+                line_split = line.split(' ',1)
             # print(line_split)
-            if validate_date(line_split[0]):
-                out_lists.append(line_split)
-
+                if validate_date(line_split[0]):
+                    out_lists.append(line_split)
+        except:
+            print("exception error occurred !!!")
+            return pd.DataFrame()
     # for out_list in out_lists:
     #     print(out_list)
 
     df = pd.DataFrame(out_lists)
     return df
 
+print(sys.argv[1])
+dir_path=sys.argv[1]
 list_df = []
-for (root, directories, files) in os.walk(dir_path):
+
+for (root, dir, files) in os.walk(dir_path):
     for file in files:
         file_path = os.path.join(root, file)
+        print(file)
         if os.path.getsize(file_path) > 0:
             df = change_df(file_path)
-            print(df.size)
             if df.size >0:
                 list_df.append(df)
 
