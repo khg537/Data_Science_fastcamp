@@ -1,0 +1,27 @@
+import pandas as pd
+
+mycol = """
+Standard_yang_object_xpath
+Prop Object Xml path
+Prop  Object Range/Value
+XML File Name
+Standard yang object Description
+Prop object Description
+"""
+
+mycol = [ i for i in mycol.split("\n")  if not i == ""]
+df = pd.read_excel('cg.xlsx')
+
+df.columns = mycol
+
+print(df.info())
+df = df.dropna(subset= ['Standard_yang_object_xpath'])
+
+s1 = df["Standard_yang_object_xpath"]
+s = s1.str.startswith('/')
+
+df = df[s]
+
+df.index = pd.RangeIndex(start = 1, stop = len(df)+1, step=1)
+
+df.to_excel('output.xlsx')
